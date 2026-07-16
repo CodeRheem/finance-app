@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  backend-core:
+    build: ./backend-core
+    ports:
+      - "3000:3000"
+
+  ai-service:
+    build: ./ai-service
+    ports:
+      - "8000:8000"
