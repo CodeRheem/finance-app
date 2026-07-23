@@ -1,0 +1,40 @@
+name: Deploy ai-service to Azure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'ai-service/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Log in to ACR
+        uses: azure/docker-login@v2
+        with:
+          login-server: financeappacr.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and push image
+        run: |
+          cd ai-service
+          docker build -t financeappacr.azurecr.io/ai-service:latest .
+          docker push financeappacr.azurecr.io/ai-service:latest
+
+      - name: Deploy to Container Apps
+        run: |
+          az containerapp update \
+            --name ai-service \
+            --resource-group finance-app-rg \
+            --image financeappacr.azurecr.io/ai-service:latest

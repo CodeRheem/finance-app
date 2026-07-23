@@ -1,0 +1,40 @@
+name: Deploy backend-core to Azure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend-core/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Log in to ACR
+        uses: azure/docker-login@v2
+        with:
+          login-server: financeappacr.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and push image
+        run: |
+          cd backend-core
+          docker build -t financeappacr.azurecr.io/backend-core:latest .
+          docker push financeappacr.azurecr.io/backend-core:latest
+
+      - name: Deploy to Container Apps
+        run: |
+          az containerapp update \
+            --name backend-core \
+            --resource-group finance-app-rg \
+            --image financeappacr.azurecr.io/backend-core:latest
