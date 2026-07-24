@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   backend-core:
     build: ./backend-core
@@ -10,3 +8,25 @@ services:
     build: ./ai-service
     ports:
       - "8000:8000"
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: financeapp
+      POSTGRES_PASSWORD: financeapp
+      POSTGRES_DB: financeapp
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  postgres_data:
+  mongo_data:
