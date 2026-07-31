@@ -3,6 +3,7 @@
 node_modules/
 dist/
 npm-debug.log*
+backend-core/generated/
 
 # --- Python / FastAPI ---
 __pycache__/
