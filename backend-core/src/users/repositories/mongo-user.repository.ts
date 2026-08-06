@@ -8,6 +8,7 @@ export class MongoUserRepository implements IUserRepository {
     return {
       id: doc._id.toString(),
       email: doc.email,
+      password: doc.password,
       name: doc.name,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
@@ -20,17 +21,19 @@ export class MongoUserRepository implements IUserRepository {
     return {
       id: doc._id.toString(),
       email: doc.email,
+      password: doc.password,
       name: doc.name,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     };
   }
 
-  async create(data: { email: string; name?: string }): Promise<User> {
+  async create(data: { email: string; password: string; name?: string }): Promise<User> {
     const doc = await UserModel.create(data);
     return {
       id: doc._id.toString(),
       email: doc.email,
+      password: doc.password,
       name: doc.name,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,

@@ -9,7 +9,7 @@ export class UsersController {
   ) {}
 
   @Post()
-  async create(@Body() body: { email: string; name?: string }) {
+  async create(@Body() body: { email: string; password: string; name?: string }) { 
     return this.userRepository.create(body);
   }
 

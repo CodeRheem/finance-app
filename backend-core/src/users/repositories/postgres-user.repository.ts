@@ -14,7 +14,7 @@ export class PostgresUserRepository implements IUserRepository {
     return prisma.user.findUnique({ where: { email } });
   }
 
-  async create(data: { email: string; name?: string }): Promise<User> {
+  async create(data: { email: string; password: string; name?: string }): Promise<User> { 
     return prisma.user.create({ data });
   }
 }
