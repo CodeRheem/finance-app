@@ -21,3 +21,22 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Account {
+  id            String   @id @default(uuid())
+  userId        String
+  accountName   String
+  balance       Float    @default(0)
+  currency      String   @default("NGN")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Transaction {
+  id            String   @id @default(uuid())
+  accountId     String
+  amount        Float
+  type          String
+  description   String?
+  createdAt     DateTime @default(now())
+}
