@@ -4,6 +4,7 @@ node_modules/
 dist/
 npm-debug.log*
 backend-core/generated/
+backend-core/src/config/firebase-service-account.json
 
 # --- Python / FastAPI ---
 __pycache__/
