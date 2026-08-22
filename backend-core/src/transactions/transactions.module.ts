@@ -3,7 +3,10 @@ import { TRANSACTION_REPOSITORY } from './repositories/transaction-repository.to
 import { PostgresTransactionRepository } from './repositories/postgres-transaction.repository';
 import { MongoTransactionRepository } from './repositories/mongo-transaction.repository';
 import { TransactionsController } from './transactions.controller';
+import { NotificationsModule } from '../notifications/notifications.module';
+
 @Module({
+  imports: [NotificationsModule],
   controllers: [TransactionsController],
   providers: [
     {
