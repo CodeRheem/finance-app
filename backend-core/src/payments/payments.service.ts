@@ -1,7 +1,9 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, UnauthorizedException, Logger } from '@nestjs/common';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class PaymentsService {
+  private readonly logger = new Logger(PaymentsService.name);
   private readonly secretKey = process.env.PAYSTACK_SECRET_KEY;
 
   async initializePayment(email: string, amountInKobo: number) {
@@ -27,5 +29,28 @@ export class PaymentsService {
       authorizationUrl: data.data.authorization_url,
       reference: data.data.reference,
     };
+  }
+
+  async handlePaystackWebhook(signature: string, rawBody: Buffer, parsedBody: any) {
+    const expectedSignature = crypto
+      .createHmac('sha512', this.secretKey!)
+      .update(rawBody)
+      .digest('hex');
+
+    if (signature !== expectedSignature) {
+      this.logger.warn('Webhook signature mismatch — possible spoofed request');
+      throw new UnauthorizedException('Invalid signature');
+    }
+
+    const event = parsedBody.event;
+
+    if (event === 'charge.success') {
+      const reference = parsedBody.data.reference;
+      const amount = parsedBody.data.amount;
+      this.logger.log(`Payment confirmed: ${reference}, amount: ${amount} kobo`);
+      // TODO: mark the corresponding transaction/account as paid in your database
+    }
+
+    return { received: true };
   }
 }
