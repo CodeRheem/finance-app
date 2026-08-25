@@ -6,9 +6,10 @@ import { AuthModule } from './auth/auth.module';
 import { AccountsModule } from './accounts/accounts.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
-  imports: [UsersModule, AuthModule, AccountsModule, TransactionsModule, NotificationsModule],
+  imports: [UsersModule, AuthModule, AccountsModule, TransactionsModule, NotificationsModule, PaymentsModule],
   controllers: [AppController],
   providers: [AppService],
 })
