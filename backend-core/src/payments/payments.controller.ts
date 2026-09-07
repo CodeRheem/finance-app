@@ -5,13 +5,13 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('payments')
 export class PaymentsController {
-  constructor(private readonly paymentsService: PaymentsService) {}
+  constructor(private readonly paymentsService: PaymentsService) { }
 
   @UseGuards(JwtAuthGuard)
   @Post('paystack/initialize')
-  async initialize(@Body() body: { email: string; amount: number }) {
+  async initialize(@Body() body: { email: string; amount: number; accountId: string }) {
     const amountInKobo = Math.round(body.amount * 100);
-    return this.paymentsService.initializePayment(body.email, amountInKobo);
+    return this.paymentsService.initializePayment(body.email, amountInKobo, body.accountId);
   }
 
   @Post('paystack/webhook')
